@@ -8,11 +8,12 @@ datasource db {
 }
 
 model User {
-  id       String   @id @unique @default(uuid())
-  username String   @unique @db.VarChar(15)
-  keyHash  String   @unique @db.VarChar(70)
-  Posts    Post?
-  Comments Comment?
+  id         String    @id @unique @default(uuid())
+  username   String    @unique @db.VarChar(15)
+  keyHash    String    @unique @db.VarChar(70)
+  lastLogout DateTime? @db.Timestamp()
+  Posts      Post[]
+  Comments   Comment[]
 }
 
 model Post {
