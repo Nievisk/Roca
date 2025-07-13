@@ -1,7 +1,7 @@
-import jwt from "jsonwebtoken"
+import * as jwt from "jsonwebtoken"
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import "dotenv/config"
-import { IJwtToken } from "src/utils/interfaces/IJwtToken";
+import { JwtContent } from "src/utils/interfaces/JwtContent";
 
 @Injectable()
 export class JwtService {
@@ -13,8 +13,8 @@ export class JwtService {
         })
     }
 
-    checkToken(token: string): IJwtToken {
-        try { return jwt.verify(token, this.secret) as unknown as IJwtToken }
+    checkToken(token: string): JwtContent {
+        try { return jwt.verify(token, this.secret) as unknown as JwtContent }
         catch (error) { 
             throw new UnauthorizedException("Unauthorized access token.") 
         }

@@ -1,6 +1,6 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "./prisma.service";
-import { IauthData } from "src/utils/interfaces/iAuthData";
+import { AuthContent } from "src/utils/interfaces/AuthContent";
 import { HashService } from "./hash.service";
 import { JwtService } from "./jwt.service";
 
@@ -12,10 +12,11 @@ export class AuthService {
         private jwt: JwtService
     ) { }
 
-    async register(data: IauthData) {
+    async register(data: AuthContent) {
         const user = await this.prisma.user.findUnique({
             where: { username: data.username }
         });
+        
         if (user) throw new ConflictException("Username already in use");
 
         const passHash = this.hash.hashData(data.password);
@@ -30,13 +31,14 @@ export class AuthService {
         return accessToken
     }
 
-    async login(data: IauthData) {
+    async login(data: AuthContent) {
         const user = await this.prisma.user.findUnique({
             where: { username: data.username }
         });
+
         if (!user) throw new NotFoundException("Username not found");
 
-        const isEqual = this.hash.compareData(data.username, user.passHash);
+        const isEqual = this.hash.compareData(data.password, user.passHash);
         if (!isEqual) throw new BadRequestException("Incorrect username or password");
 
         const accessToken = this.jwt.createToken(user.id);
@@ -48,5 +50,11 @@ export class AuthService {
             where: { id },
             data: { lastLogout: new Date() }
         })
+    }
+
+    async delete(id: string) {
+        await this.prisma.user.delete({
+            where: { id }
+        });
     }
 }

@@ -1,4 +1,4 @@
-export class IJwtToken {
+export class JwtContent {
     sub: string;
     iat: number;
 }

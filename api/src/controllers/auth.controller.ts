@@ -1,15 +1,15 @@
-import { Body, Controller, Post, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Post, Res } from "@nestjs/common";
 import { Response } from "express";
 import { AuthService } from "src/services/auth.service";
 import { User } from "src/utils/decorators/user";
-import { AuthDto } from "src/utils/dtos/AuthDto";
+import { AuthContent } from "src/utils/dtos/AuthContent";
 
 @Controller("auth")
 export class AuthController {
     constructor(private authService: AuthService) { }
 
     @Post("register")
-    async register(@Res() res: Response, @Body() dto: AuthDto) {
+    async register(@Res() res: Response, @Body() dto: AuthContent) {
         const accessToken = await this.authService.register(dto);
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
@@ -17,10 +17,11 @@ export class AuthController {
             sameSite: "strict",
             maxAge: 12 * 60 * 60 * 1000
         })
+        res.json({ message: "Ok" })
     }
 
     @Post("login")
-    async login(@Res() res: Response, @Body() dto: AuthDto) {
+    async login(@Res() res: Response, @Body() dto: AuthContent) {
         const accessToken = await this.authService.login(dto);
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
@@ -28,11 +29,21 @@ export class AuthController {
             sameSite: "strict",
             maxAge: 12 * 60 * 60 * 1000
         })
+        res.json({ message: "Ok" })
+
     }
 
-    @Post("logout") 
+    @Post("logout")
     async logout(@Res() res: Response, @User("id") id: string) {
         await this.authService.logout(id);
         res.clearCookie("accessToken")
+        res.json({ message: "Ok" })
+    }
+
+    @Delete()
+    async delete(@Res() res: Response, @User("id") id: string) {
+        await this.authService.delete(id);
+        res.clearCookie("accessToken")
+        res.json({ message: "Ok" })
     }
 }

@@ -41,8 +41,3 @@ model Comment {
   replies   Comment[] @relation("CommentToReplies")
   parent    Comment?  @relation("CommentToReplies", fields: [parentId], references: [id], onDelete: Cascade)
 }
-
-model Category {
-  id   Int    @id @unique @default(autoincrement())
-  name String @unique @db.VarChar(30)
-}
