@@ -3,6 +3,7 @@ import { PrismaService } from "./prisma.service";
 import { Injectable } from "@nestjs/common";
 import { QueryParamsContent } from "src/utils/dtos/QueryParamsContent";
 import { take } from "rxjs";
+import e from "express";
 
 @Injectable()
 export class PostService {
@@ -14,11 +15,12 @@ export class PostService {
         })
     }
 
-    async search({ text, page = 1 }: QueryParamsContent) {
+    async search({ text, page = 1, category }: QueryParamsContent) {
         const whereCondition: any = {
             OR: [
                 { text: { contains: text, mode: "insensitive" } },
                 { title: { contains: text, mode: "insensitive" } },
+                { category: { equals: category } },
                 {
                     Comments: {
                         some: {

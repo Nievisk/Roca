@@ -15,9 +15,9 @@ export class PostController {
     @UseInterceptors(FileInterceptor("image", multerConst))
     async create(@User("id") id: string, @Body() dto: PostContent, @UploadedFile() file: Express.Multer.File) {
 
-        if (!file && dto.text) throw new BadRequestException("Either file or text should exist");
+        if (!file && (!dto.text || dto.text.trim() === "")) throw new BadRequestException("Either file or text should exist");
 
-        await this.postService.create(id, { image: file.path, ...dto });
+        await this.postService.create(id, { image: file?.path, ...dto });
         return "Ok"
     }
 
