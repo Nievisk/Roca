@@ -4,9 +4,29 @@ import { AuthModule } from "./auth.module";
 import { AuthMiddleware } from "src/utils/middlewares/AuthMiddleware";
 import { PostModule } from "./post.module";
 import { CommentModule } from "./comment.module";
+import { ThrottlerModule } from "@nestjs/throttler";
 
 @Module({
-    imports: [UtilsModule, AuthModule, PostModule, CommentModule]
+    imports: [
+        ThrottlerModule.forRoot([
+            {
+                name: "short",
+                ttl: 1000,
+                limit: 3
+            },
+            {
+                name: "medium",
+                ttl: 60000,
+                limit: 25
+            },
+            {
+                name: "long",
+                ttl: 600000,
+                limit: 100
+            }
+        ]),
+        UtilsModule, AuthModule, PostModule, CommentModule
+    ]
 })
 export class AppModule implements NestModule {
     configure(consumer: MiddlewareConsumer) {
