@@ -51,32 +51,24 @@ model Comment {
   Reports   Report[]
 }
 
-enum Status {
-  pending
-  solved
-  rejected
-}
-
 enum Reason {
-  sexual_content
   spam
   harassment
   violence
+  sexual_content
   abuse
   other
 }
 
 model Report {
-  id           Int      @id @unique @default(autoincrement())
-  status       Status   @default(pending)
-  reason       Reason
-  customReason String?  @db.VarChar(100)
-  userId       String   @db.VarChar(36)
-  postId       Int?
-  commentId    Int?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  Post         Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
-  Comment      Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  id        Int      @id @unique @default(autoincrement())
+  reason    Reason
+  text      String?  @db.VarChar(100)
+  userId    String   @db.VarChar(36)
+  postId    Int?
+  commentId Int?
+  createdAt DateTime @default(now())
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  Comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
 }

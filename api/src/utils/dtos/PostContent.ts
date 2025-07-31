@@ -15,6 +15,6 @@ export class PostContent {
     text: string | null;
 
     @IsString()
-    @IsIn(["Music", "Games", "Movies & series", "Others", "Animes", "Art"], { message: "Post doesn't match any category" })
+    @IsIn(["music", "games", "movies & series", "other", "animes", "art"], { message: "Post doesn't match any category" })
     category: string
 }

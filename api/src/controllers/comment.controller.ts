@@ -1,6 +1,6 @@
 import { BadRequestException, Body, Controller, Get, Param, Post, Query, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { CommentService } from "src/services/comment.controller";
+import { CommentService } from "src/services/comment.service";
 import { User } from "src/utils/decorators/user";
 import { CommentContent } from "src/utils/dtos/CommentContent";
 import { CommentQueryParamsContent } from "src/utils/dtos/CommentQueryParamsContent";

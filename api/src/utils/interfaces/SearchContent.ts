@@ -1,4 +1,4 @@
-type CategoryTye = "Music" | "Games" | "Movies & series" | "Other" | "Animes" | "Art"
+type CategoryTye = "music" | "games" | "movies & series" | "other" | "animes" | "art"
 
 export interface SearchContent {
     category?: CategoryTye;
