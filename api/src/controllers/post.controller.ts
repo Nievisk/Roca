@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Param, Post, Query, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Query, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Express } from "express";
 import { PostService } from "src/services/post.service";
@@ -6,6 +6,7 @@ import { User } from "src/utils/decorators/user";
 import { QueryParamsContent } from "src/utils/dtos/QueryParamsContent";
 import { PostContent } from "src/utils/dtos/PostContent";
 import { multerConst } from "src/utils/multer/multer";
+import { RoleGuard } from "src/utils/guards/RoleGuard.guard";
 
 @Controller("posts")
 export class PostController {
@@ -31,5 +32,12 @@ export class PostController {
     async onePost(@Param("id") id: number) {
         const posts = await this.postService.onePost(id);
         return posts
+    }
+
+    @Delete(":id")
+    @UseGuards(RoleGuard)
+    async deletePost(@Param("id") id: number) {
+        await this.postService.delete(id);
+        return "Ok"
     }
 }

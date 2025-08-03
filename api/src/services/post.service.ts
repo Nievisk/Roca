@@ -115,4 +115,8 @@ export class PostService {
 
         return post ?? []
     }
+
+    async delete(id: number) {
+        await this.prisma.post.delete({ where: { id } })
+    }
 }

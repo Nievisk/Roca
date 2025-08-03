@@ -3,7 +3,6 @@ import { NextFunction, Response } from "express";
 import { JsonWebTokenError } from "jsonwebtoken";
 import { JwtService } from "src/services/jwt.service";
 import { PrismaService } from "src/services/prisma.service";
-import { JwtContent } from "../interfaces/JwtContent";
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
@@ -16,7 +15,7 @@ export class AuthMiddleware implements NestMiddleware {
         const accessToken = req.cookies["accessToken"];
         if (!accessToken) return next(new UnauthorizedException("Missing access cookie"));
         try {
-            const { sub, iat } = this.jwtService.checkToken(accessToken) as JwtContent;
+            const { sub, iat } = this.jwtService.checkToken(accessToken);
             const user = await this.prisma.user.findUnique({ where: { id: sub } });
 
             if (!user) return next("User not found");

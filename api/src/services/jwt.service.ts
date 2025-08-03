@@ -7,8 +7,8 @@ import { JwtContent } from "src/utils/interfaces/JwtContent";
 export class JwtService {
     secret = process.env.ACCESS_TOKEN!
 
-    createToken(id: string) {
-        return jwt.sign({ sub: id }, this.secret, {
+    createToken(id: string, role: "admin" | "user") {
+        return jwt.sign({ sub: id, role }, this.secret, {
             expiresIn: "12h"
         })
     }

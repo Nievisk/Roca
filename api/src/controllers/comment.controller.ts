@@ -1,9 +1,10 @@
-import { BadRequestException, Body, Controller, Get, Param, Post, Query, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Query, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { CommentService } from "src/services/comment.service";
 import { User } from "src/utils/decorators/user";
 import { CommentContent } from "src/utils/dtos/CommentContent";
 import { CommentQueryParamsContent } from "src/utils/dtos/CommentQueryParamsContent";
+import { RoleGuard } from "src/utils/guards/RoleGuard.guard";
 import { multerConst } from "src/utils/multer/multer";
 
 @Controller("posts/:id/comments")
@@ -25,4 +26,11 @@ export class CommentController {
         const comments = await this.commentservice.find({ ...dto, postId });
         return comments;
     }
+
+      @Delete(":id")
+        @UseGuards(RoleGuard)
+        async deletePost(@Param("id") id: number) {
+            await this.commentservice.delete(id);
+            return "Ok"
+        }
 }

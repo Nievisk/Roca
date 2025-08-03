@@ -55,4 +55,8 @@ export class CommentService {
 
         return { comments, totalPages, totalComments };
     }
+
+    async delete(id: number) {
+        await this.prisma.comment.delete({ where: { id } })
+    }
 }
