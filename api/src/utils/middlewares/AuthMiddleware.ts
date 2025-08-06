@@ -13,15 +13,15 @@ export class AuthMiddleware implements NestMiddleware {
 
     async use(req: any, res: Response, next: NextFunction) {
         const accessToken = req.cookies["accessToken"];
-        if (!accessToken) return next(new UnauthorizedException("Missing access cookie"));
+        if (!accessToken) return next(new UnauthorizedException("Denied. Missing token"));
         try {
             const { sub, iat } = this.jwtService.checkToken(accessToken);
             const user = await this.prisma.user.findUnique({ where: { id: sub } });
 
-            if (!user) return next("User not found");
+            if (!user) return next("Coudn't identify source of the connection");
             
             if (user.lastLogout && iat / 1000 > user.lastLogout.valueOf())
-                return next("Unauthorized access token")
+                return next("The session has finished")
 
             req.user = { id: sub };
             return next()

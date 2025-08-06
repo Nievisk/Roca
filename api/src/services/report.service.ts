@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ConflictException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "./prisma.service";
 import { ReportContent } from "src/utils/interfaces/ReportContent";
 import { endOfDay, startOfDay, startOfISOWeek, startOfMonth } from "date-fns"
@@ -87,6 +87,11 @@ export class ReportService {
     }
 
     async create(data: ReportContent) {
+        const post = await this.prisma.post.findUnique({ where: { id: data.postId } });
+
+        if (!post) throw new NotFoundException(`Post "${data.postId}" not found`)
+        if (post.userId === data.userId) throw new ForbiddenException("Cannot report own post")
+
         const existingReport = await this.prisma.report.findFirst({
             where: {
                 postId: data.postId,
@@ -95,7 +100,7 @@ export class ReportService {
             },
         });
 
-        if (existingReport) return;
+        if (existingReport) throw new ConflictException(`Duplicate report not allowed`);
 
         await this.prisma.report.create({
             data: {

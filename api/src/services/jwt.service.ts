@@ -16,7 +16,7 @@ export class JwtService {
     checkToken(token: string): JwtContent {
         try { return jwt.verify(token, this.secret) as unknown as JwtContent }
         catch (error) { 
-            throw new UnauthorizedException("Unauthorized access token.") 
+            throw new UnauthorizedException("Failed. It can be due to expired token or something else") 
         }
     }
 }

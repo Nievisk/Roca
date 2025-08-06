@@ -10,7 +10,7 @@ export class CommentService {
     async create(data: commentContent) {
         const existingPost = await this.prisma.post.findUnique({ where: { id: data.postId } });
 
-        if (!existingPost) throw new BadRequestException("Post not found");
+        if (!existingPost) throw new BadRequestException(`Post "${data.postId}" not found`);
 
         await this.prisma.comment.create({
             data: { ...data }

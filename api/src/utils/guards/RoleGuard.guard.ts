@@ -14,18 +14,17 @@ export class RoleGuard implements CanActivate {
         const request = ctx.switchToHttp().getRequest<Request>();
         const accessToken = request.cookies["accessToken"];
 
-        if (!accessToken) throw new ForbiddenException("Missing access token");
+        if (!accessToken) throw new ForbiddenException("Denied. Missing token");
 
         const decode = this.jwtService.checkToken(accessToken);
 
-        if (decode.role !== "admin") throw new ForbiddenException("Denied access attempt");
+        if (decode.role !== "admin") throw new ForbiddenException("Connection attempt not allowed");
 
         const user = await this.prisma.user.findUnique({ where: { id: decode.sub } });
 
-        if (!user) throw new ForbiddenException("Denied access attempt");
+        if (!user) throw new ForbiddenException("Coudn't identify source of the connection");
 
-        if (user.lastLogout && decode.iat / 1000 > user.lastLogout.valueOf()) throw new ForbiddenException("Expired connection");
-
+        if (user.lastLogout && decode.iat / 1000 > user.lastLogout.valueOf()) throw new ForbiddenException("The session has finished");
 
         else return true
     }

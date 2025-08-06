@@ -15,7 +15,7 @@ export class CommentController {
     @UseInterceptors(FileInterceptor("image", multerConst))
     async create(@UploadedFile() file: Express.Multer.File, @Body() dto: CommentContent, @User("id") id: string, @Param("id") postId: number) {
 
-        if (!file && (!dto.text || dto.text.trim() === "")) throw new BadRequestException("Either file or text should exist");
+        if (!file && (!dto.text || dto.text.trim() === "")) throw new BadRequestException("Either file or text must be provided");
         
         await this.commentservice.create({ ...dto,image: file?.path, userId: id, postId });
         return "Ok";
