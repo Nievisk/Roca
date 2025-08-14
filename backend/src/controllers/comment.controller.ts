@@ -16,8 +16,8 @@ export class CommentController {
     async create(@UploadedFile() file: Express.Multer.File, @Body() dto: CommentContent, @User("id") id: string, @Param("id") postId: number) {
 
         if (!file && (!dto.text || dto.text.trim() === "")) throw new BadRequestException("Either file or text must be provided");
-        
-        await this.commentservice.create({ ...dto,image: file?.path, userId: id, postId });
+
+        await this.commentservice.create({ ...dto, image: file?.path, userId: id, postId });
         return "Ok";
     }
 
@@ -27,10 +27,10 @@ export class CommentController {
         return comments;
     }
 
-      @Delete(":id")
-        @UseGuards(RoleGuard)
-        async deletePost(@Param("id") id: number) {
-            await this.commentservice.delete(id);
-            return "Ok"
-        }
+    @Delete(":id")
+    @UseGuards(RoleGuard)
+    async deletePost(@Param("id") id: number) {
+        await this.commentservice.delete(id);
+        return "Ok"
+    }
 }

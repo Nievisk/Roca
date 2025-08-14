@@ -1,8 +1,8 @@
 {
-  "name": "api",
+  "name": "backend",
   "version": "0.0.1",
   "description": "",
-  "author": "NieGatt",
+  "author": "Nievisk",
   "private": false,
   "license": "MIT",
   "scripts": {
