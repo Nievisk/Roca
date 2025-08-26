@@ -1,8 +1,9 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "./prisma.service";
-import { AuthContent } from "src/utils/interfaces/AuthContent";
+import { RegisterContent } from "src/utils/interfaces/RegisterContent";
 import { HashService } from "./hash.service";
 import { JwtService } from "./jwt.service";
+import { LoginContent } from "src/utils/dtos/LoginContent";
 
 @Injectable()
 export class AuthService {
@@ -12,7 +13,7 @@ export class AuthService {
         private jwt: JwtService
     ) { }
 
-    async register(data: AuthContent) {
+    async register(data: RegisterContent) {
         const user = await this.prisma.user.findUnique({
             where: { username: data.username }
         });
@@ -32,7 +33,7 @@ export class AuthService {
         return accessToken
     }
 
-    async login(data: AuthContent) {
+    async login(data: LoginContent) {
         const user = await this.prisma.user.findUnique({
             where: { username: data.username }
         });

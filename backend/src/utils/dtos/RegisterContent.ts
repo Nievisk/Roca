@@ -1,6 +1,6 @@
 import { IsBoolean, IsOptional, IsString, Matches } from "class-validator"
 
-export class AuthContent {
+export class RegisterContent {
     @IsOptional()
     @IsBoolean()
     admin?: boolean;

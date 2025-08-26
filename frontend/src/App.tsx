@@ -1,10 +1,8 @@
+import { AppRouter } from "./routes"
+
 function App() {
 
-  return (
-    <div className="text-blue-700">
-      hello world!
-    </div>
-  )
+  return <AppRouter />
 }
 
 export default App
