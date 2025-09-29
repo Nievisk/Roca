@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const registerSchema = z.object({
+export const loginSchema = z.object({
   admin: z.boolean().optional().default(false),
 
   username: z.string()
@@ -19,14 +19,4 @@ export const registerSchema = z.object({
         message: "Password must include uppercase, lowercase, number, and special character",
       }
     ),
-
-  confirmPassword: z.string(),
-}).superRefine((data, ctx) => {
-  if (data.password !== data.confirmPassword) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: "Passwords don't match",
-      path: ["confirmPassword"],
-    });
-  }
-});
+})

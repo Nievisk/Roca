@@ -17,7 +17,7 @@ export class AuthService {
         const user = await this.prisma.user.findUnique({
             where: { username: data.username }
         });
-        
+
         if (user) throw new ConflictException("Username already in use");
 
         const passHash = this.hash.hashData(data.password);
@@ -58,5 +58,12 @@ export class AuthService {
         await this.prisma.user.delete({
             where: { id }
         });
+    }
+
+    async status(id: string) {
+        return await this.prisma.user.findUnique({
+            where: { id },
+            select: { username: true }
+        })
     }
 }

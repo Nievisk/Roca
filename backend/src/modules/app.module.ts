@@ -26,7 +26,7 @@ import { ReportModule } from "./report.module";
                 limit: 100
             }
         ]),
-        UtilsModule, AuthModule, PostModule, 
+        UtilsModule, AuthModule, PostModule,
         CommentModule, ReportModule
     ]
 })
@@ -36,6 +36,7 @@ export class AppModule implements NestModule {
             .apply(AuthMiddleware)
             .forRoutes(
                 { path: "auth/logout", method: RequestMethod.POST },
+                { path: "auth/user", method: RequestMethod.GET },
                 { path: "auth", method: RequestMethod.DELETE },
                 { path: "posts", method: RequestMethod.POST },
                 { path: "posts/:id/comments", method: RequestMethod.POST }

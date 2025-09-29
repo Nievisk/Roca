@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Post, Res } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Post, Res } from "@nestjs/common";
 import { Response } from "express";
 import { AuthService } from "src/services/auth.service";
 import { User } from "src/utils/decorators/user";
@@ -46,5 +46,11 @@ export class AuthController {
         await this.authService.delete(id);
         res.clearCookie("accessToken")
         res.json({ message: "Ok" })
+    }
+
+    @Get("user")
+    async status(@Res() res: Response, @User("id") id: string) {
+        const username = await this.authService.status(id);
+        res.json({ username })
     }
 }

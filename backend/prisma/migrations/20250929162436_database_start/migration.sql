@@ -1,8 +1,16 @@
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('user', 'admin');
+
+-- CreateEnum
+CREATE TYPE "Reason" AS ENUM ('spam', 'harassment', 'violence', 'sexual_content', 'abuse', 'other');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "username" VARCHAR(15) NOT NULL,
-    "keyHash" VARCHAR(70) NOT NULL,
+    "passHash" VARCHAR(70) NOT NULL,
+    "role" "Role" NOT NULL DEFAULT 'user',
+    "lastLogout" TIMESTAMP,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -34,11 +42,16 @@ CREATE TABLE "Comment" (
 );
 
 -- CreateTable
-CREATE TABLE "Category" (
+CREATE TABLE "Report" (
     "id" SERIAL NOT NULL,
-    "name" VARCHAR(30) NOT NULL,
+    "reason" "Reason" NOT NULL,
+    "text" VARCHAR(100),
+    "userId" VARCHAR(36) NOT NULL,
+    "postId" INTEGER,
+    "commentId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "Category_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Report_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -48,7 +61,7 @@ CREATE UNIQUE INDEX "User_id_key" ON "User"("id");
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_keyHash_key" ON "User"("keyHash");
+CREATE UNIQUE INDEX "User_passHash_key" ON "User"("passHash");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Post_id_key" ON "Post"("id");
@@ -69,10 +82,7 @@ CREATE UNIQUE INDEX "Comment_postId_key" ON "Comment"("postId");
 CREATE UNIQUE INDEX "Comment_userId_key" ON "Comment"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Category_id_key" ON "Category"("id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
+CREATE UNIQUE INDEX "Report_id_key" ON "Report"("id");
 
 -- AddForeignKey
 ALTER TABLE "Post" ADD CONSTRAINT "Post_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -85,3 +95,12 @@ ALTER TABLE "Comment" ADD CONSTRAINT "Comment_userId_fkey" FOREIGN KEY ("userId"
 
 -- AddForeignKey
 ALTER TABLE "Comment" ADD CONSTRAINT "Comment_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Comment"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Report" ADD CONSTRAINT "Report_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Report" ADD CONSTRAINT "Report_postId_fkey" FOREIGN KEY ("postId") REFERENCES "Post"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Report" ADD CONSTRAINT "Report_commentId_fkey" FOREIGN KEY ("commentId") REFERENCES "Comment"("id") ON DELETE CASCADE ON UPDATE CASCADE;
