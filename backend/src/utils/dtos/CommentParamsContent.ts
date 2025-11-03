@@ -1,7 +1,7 @@
 import { Transform } from "class-transformer";
 import { IsNumber, IsOptional, Min } from "class-validator";
 
-export class CommentQueryParamsContent {
+export class CommentParamsContent {
     @IsOptional()
     @Transform(({ value }) => Number(value))
     @IsNumber()

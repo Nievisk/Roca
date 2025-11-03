@@ -15,7 +15,7 @@ export const HeaderComponent = () => {
                 username() ? (
                     <div className="bg-gray-400 h-8 w-16 flex justify-center text-white items-center rounded" onClick={async () => await logoutFun()}>logout</div>
                 ) : (
-                    <Link className="bg-gray-400 h-8 w-16 flex justify-center text-white items-center rounded" to="/sign-in">login</Link>
+                    <Link className="bg-gray-400 h-8 w-16 flex justify-center text-white items-center rounded" to="/auth/sign-in">login</Link>
                 )
             }
         </div>

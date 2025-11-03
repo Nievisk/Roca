@@ -7,7 +7,7 @@ const UsernameContextProvider = ({ children }: { children: React.ReactNode }) =>
 
     const fetchData = async () => {
         const res = await fetch("http://localhost:3000/auth/user", {
-            method: "POST",
+            method: "GET",
             headers: { "Content-Type": "application/json" },
             credentials: "include"
         })

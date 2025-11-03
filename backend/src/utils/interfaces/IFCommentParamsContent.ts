@@ -1,4 +1,4 @@
-export interface FindCommentsQuery {
+export interface IFCommentParamsContent {
     postId: number;
     page: number;
     parentId?: number;

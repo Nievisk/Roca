@@ -1,7 +1,7 @@
 type CategoryTye = "music" | "games" | "movies&series" | "other" | "animes" | "art"
 
-export interface SearchContent {
+export interface ISearchPostParamsContent {
     category?: CategoryTye;
-    text?: string;
+    title?: string;
     page?: number;
 }

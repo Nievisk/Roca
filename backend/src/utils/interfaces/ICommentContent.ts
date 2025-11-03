@@ -1,4 +1,4 @@
-export interface commentContent {
+export interface ICommentContent {
     text?: string;
     image?: string;
     postId: number;

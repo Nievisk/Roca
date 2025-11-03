@@ -12,7 +12,7 @@ export const Home = () => {
             <div
                 className="w-[550px] h-60 mt-36 flex flex-col items-center">
 
-                <form className="flex gap-2" onSubmit={() => navigate(`/posts?text=${input}`)}>
+                <form className="flex gap-2" onSubmit={() => navigate(`/posts?title=${input}`)}>
                     <input className="w-60 h-8 bg-gray-200 text-gray-500 rounded-full outline-none px-3 border border-gray-300"
                         onChange={(e: any) => setInput(e.target.value)}
                         value={input}

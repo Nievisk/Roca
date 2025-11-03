@@ -1,13 +1,13 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "./prisma.service";
-import { commentContent } from "src/utils/interfaces/CommentContent";
-import { FindCommentsQuery } from "src/utils/interfaces/FindCommentsQuery";
+import { ICommentContent } from "src/utils/interfaces/ICommentContent";
+import { IFCommentParamsContent } from "src/utils/interfaces/IFCommentParamsContent";
 
 @Injectable()
 export class CommentService {
     constructor(private prisma: PrismaService) { }
 
-    async create(data: commentContent) {
+    async create(data: ICommentContent) {
         const existingPost = await this.prisma.post.findUnique({ where: { id: data.postId } });
 
         if (!existingPost) throw new BadRequestException(`Post "${data.postId}" not found`);
@@ -17,7 +17,7 @@ export class CommentService {
         });
     }
 
-    async find(data: FindCommentsQuery) {
+    async find(data: IFCommentParamsContent) {
         const skip = (data.page - 1) * (data.parentId ? 5 : 25);
 
         const totalComments = await this.prisma.comment.count({

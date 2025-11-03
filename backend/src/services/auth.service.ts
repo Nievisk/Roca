@@ -24,12 +24,11 @@ export class AuthService {
         const newUser = await this.prisma.user.create({
             data: {
                 username: data.username,
-                passHash,
-                role: data.admin ? "admin" : "user"
+                passHash
             }
         });
 
-        const accessToken = this.jwt.createToken(newUser.id, newUser.role);
+        const accessToken = this.jwt.createToken(newUser.id);
         return accessToken
     }
 
@@ -43,7 +42,7 @@ export class AuthService {
         const isEqual = this.hash.compareData(data.password, user.passHash);
         if (!isEqual) throw new BadRequestException("Incorrect username or password");
 
-        const accessToken = this.jwt.createToken(user.id, user.role);
+        const accessToken = this.jwt.createToken(user.id);
         return accessToken
     }
 

@@ -1,9 +1,7 @@
 import { Post } from "@prisma/client";
 import { PrismaService } from "./prisma.service";
-import { Injectable } from "@nestjs/common";
-import { QueryParamsContent } from "src/utils/dtos/QueryParamsContent";
-import { take } from "rxjs";
-import e from "express";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { PostParamsContent } from "src/utils/dtos/PostParamsContent";
 
 @Injectable()
 export class PostService {
@@ -15,44 +13,37 @@ export class PostService {
         })
     }
 
-    async search({ text, page = 1, category }: QueryParamsContent) {
-        const whereCondition: any = {
-            OR: [
-                { text: { contains: text, mode: "insensitive" } },
-                { title: { contains: text, mode: "insensitive" } },
-                { category: { equals: category } },
-                {
-                    Comments: {
-                        some: {
-                            text: { contains: text, mode: "insensitive" }
-                        }
-                    }
-                }
-            ]
-        };
+    async search({ title, page = 1, category }: PostParamsContent) {
+        const count = await this.prisma.post.count({
+            where: {
+                OR: [
+                    { title: { contains: title, mode: "insensitive" } },
+                    { category: { equals: category } },
 
-        const count = await this.prisma.post.count({ where: whereCondition });
+                ]
+            }
+        });
 
-        const pageSize = 20;
+        if (count === 0) throw new NotFoundException("No posts was found")
+
+        const pageSize = 5;
         const totalPages = Math.ceil(count / pageSize);
         const pageNumber = Math.min(page, totalPages);
 
         const posts = await this.prisma.post.findMany({
-            where: whereCondition,
+            where: {
+                OR: [
+                    { title: { contains: title, mode: "insensitive" } },
+                    { category: { equals: category } },
+
+                ]
+            },
             include: {
                 User: {
                     select: {
                         username: true
                     }
                 },
-                Comments: {
-                    select: {
-                        text: true,
-                        image: true,
-                        createdAt: true
-                    },
-                    take: 1,
-                }
             },
             take: pageSize,
             skip: (pageNumber - 1) * pageSize,
@@ -114,9 +105,5 @@ export class PostService {
         })
 
         return post ?? []
-    }
-
-    async delete(id: number) {
-        await this.prisma.post.delete({ where: { id } })
     }
 }

@@ -5,7 +5,6 @@ import { AuthMiddleware } from "src/utils/middlewares/AuthMiddleware";
 import { PostModule } from "./post.module";
 import { CommentModule } from "./comment.module";
 import { ThrottlerModule } from "@nestjs/throttler";
-import { ReportModule } from "./report.module";
 
 @Module({
     imports: [
@@ -27,7 +26,7 @@ import { ReportModule } from "./report.module";
             }
         ]),
         UtilsModule, AuthModule, PostModule,
-        CommentModule, ReportModule
+        CommentModule
     ]
 })
 export class AppModule implements NestModule {

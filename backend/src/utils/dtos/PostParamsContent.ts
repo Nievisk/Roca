@@ -1,12 +1,12 @@
 import { Transform } from "class-transformer";
 import { IsIn, IsNumber, IsOptional, IsString, Length, Matches, ValidateIf } from "class-validator";
 
-export class QueryParamsContent {
+export class PostParamsContent {
     @IsOptional()
     @IsString()
     @Length(1, 500)
     @Matches(/[a-zA-Z0-9\s\=\-\!\)\(\+\&\%\$\#\@\?]/)
-    text?: string;
+    title?: string;
 
     @IsOptional()
     @IsString()

@@ -3,8 +3,8 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { CommentService } from "src/services/comment.service";
 import { User } from "src/utils/decorators/user";
 import { CommentContent } from "src/utils/dtos/CommentContent";
-import { CommentQueryParamsContent } from "src/utils/dtos/CommentQueryParamsContent";
-import { RoleGuard } from "src/utils/guards/RoleGuard.guard";
+import { CommentParamsContent } from "src/utils/dtos/CommentParamsContent";
+
 import { multerConst } from "src/utils/multer/multer";
 
 @Controller("posts/:id/comments")
@@ -22,15 +22,8 @@ export class CommentController {
     }
 
     @Get()
-    async find(@Param("id") postId: number, @Query() dto: CommentQueryParamsContent) {
+    async find(@Param("id") postId: number, @Query() dto: CommentParamsContent) {
         const comments = await this.commentservice.find({ ...dto, postId });
         return comments;
-    }
-
-    @Delete(":id")
-    @UseGuards(RoleGuard)
-    async deletePost(@Param("id") id: number) {
-        await this.commentservice.delete(id);
-        return "Ok"
     }
 }
